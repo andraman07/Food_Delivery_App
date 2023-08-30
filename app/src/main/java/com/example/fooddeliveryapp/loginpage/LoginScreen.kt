@@ -45,7 +45,7 @@ class LoginScreen : AppCompatActivity() {
 
         binding.registerBtn.setOnClickListener {
             startActivity(Intent(this@LoginScreen,SignUpScreen::class.java))
-        } //navigating from login screen to sign up
+        } //navigating from login screen to sign up screen
 
         binding.fbBtn.setOnClickListener {
             Toast.makeText(this,"Coming Soon...",Toast.LENGTH_SHORT).show()
@@ -81,7 +81,7 @@ class LoginScreen : AppCompatActivity() {
 
                     if (task.isSuccessful) {
 
-                        Toast.makeText(this,"signing up ",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this,"sign in successfully",Toast.LENGTH_SHORT).show()
 
                     } else {
 
