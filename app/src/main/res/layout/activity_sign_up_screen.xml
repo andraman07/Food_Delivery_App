@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".loginpage.SignUpScreen">
+    android:orientation="vertical"
+    tools:context=".loginpage.SignupActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/signup_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:backgroundTint="@color/white"
+        android:background="?attr/colorPrimary"/>
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,7 +44,6 @@
                 android:textColor="@color/black"
                 android:textSize="26sp"
                 android:textStyle="bold" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
@@ -127,36 +135,6 @@
                 android:elevation="8dp"
                 android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="44dp"
-                android:layout_marginBottom="27dp"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/already_have_an_account"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    />
-
-                <TextView
-                    android:id="@+id/login_back_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/log_in"
-                    android:textColor="@color/crimson"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    />
-
-            </LinearLayout>
-
-
         </LinearLayout>
 
     </ScrollView>
@@ -169,4 +147,4 @@
         android:visibility="gone"
         />
 
-</FrameLayout>
+</LinearLayout>
