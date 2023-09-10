@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".loginpage.LoginScreen">
+    tools:context=".loginpage.LoginActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                 app:passwordToggleEnabled="true"
                 >
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/login_password_field"
+                    android:id="@+id/password_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
@@ -72,10 +72,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/forgot_pass_btn"
+                android:id="@+id/forgot_btn"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_marginVertical="15dp"
                 android:text="@string/forgot_password"
                 android:textColor="@color/black"
