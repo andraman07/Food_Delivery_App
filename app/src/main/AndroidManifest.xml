@@ -14,14 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodDeliveryApp"
         tools:targetApi="33">
-
-
         <activity
-            android:name=".loginpage.SignUpScreen"
+            android:name=".loginpage.ForgotPasswordActivity"
+            android:exported="false"
+            android:theme="@style/LoginScreenTheme"/>
+        <activity
+            android:name=".loginpage.SignupActivity"
             android:exported="false"
             android:theme="@style/LoginScreenTheme" />
         <activity
-            android:name=".loginpage.LoginScreen"
+            android:name=".loginpage.LoginActivity"
             android:exported="false"
             android:theme="@style/LoginScreenTheme" />
         <activity
