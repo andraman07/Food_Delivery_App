@@ -25,12 +25,11 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-
-class LoginScreen : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginScreenBinding
-    private lateinit var auth: FirebaseAuth //The entry point of the Firebase Authentication SDK
-    private lateinit var googleSignInClient: GoogleSignInClient  //A client for interacting with the Google Sign In API
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     companion object{
         private const val RC_SIGN_IN=100
@@ -39,85 +38,94 @@ class LoginScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+
         binding=ActivityLoginScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        auth = Firebase.auth
+
+        firebaseAuth = Firebase.auth
 
         binding.registerBtn.setOnClickListener {
-            startActivity(Intent(this@LoginScreen,SignUpScreen::class.java))
-        } //navigating from login screen to sign up screen
-
-        binding.fbBtn.setOnClickListener {
-            Toast.makeText(this,"Coming Soon...",Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this@LoginActivity,SignupActivity::class.java))
         }
 
         binding.loginBtn.setOnClickListener {
+            emailPasswordSignIn()
+        }
 
-            val email: String = binding.loginEmailField.text.toString()
-            val password: String = binding.loginPasswordField.text.toString()
+        binding.googleBtn.setOnClickListener {
+            googleSignIn()
+        }
 
-            if(!checkInternetConnection()){
+        binding.forgotBtn.setOnClickListener {
+            startActivity(Intent(this,ForgotPasswordActivity::class.java))
+        }
 
-                Toast.makeText(this, "Check your connection and try again", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+    }
 
-            }
+    private fun emailPasswordSignIn() {
+        val email: String = binding.loginEmailField.text.toString()
+        val password: String = binding.passwordField.text.toString()
 
-            if (email.isEmpty()) {
-                binding.loginEmailField.error = "enter your email"
-                return@setOnClickListener
-            }
+        if(!checkInternetConnection()){
+            Toast.makeText(this, "Check your connection and try again", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-            if (password.isEmpty()) {
-                Toast.makeText(this, "enter password", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        if (email.isEmpty()){
+            binding.loginEmailField.error = "enter your email"
+            return
+        }
 
-            binding.loginProgress.visibility=View.VISIBLE
+        if (password.isEmpty()) {
+            Toast.makeText(this, "enter password", Toast.LENGTH_SHORT).show()
+            return
+        }
 
+        binding.loginProgress.visibility=View.VISIBLE
 
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
 
-                    if (task.isSuccessful) {
+                if (task.isSuccessful) {
 
-                        Toast.makeText(this,"sign in successfully",Toast.LENGTH_SHORT).show()
-
-                    } else {
-
-                        when(task.exception){
-
-                            is FirebaseNetworkException -> Toast.makeText(this, "Check your network connection ", Toast.LENGTH_SHORT).show()
-                            is FirebaseAuthInvalidUserException -> Toast.makeText(this, "User does not exist", Toast.LENGTH_SHORT).show()
-                            is FirebaseAuthInvalidCredentialsException -> Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
-                            is FirebaseTooManyRequestsException ->   Toast.makeText(this, "Too many attempts, please try again later", Toast.LENGTH_SHORT).show()
-                            else ->  Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show()
-
-                        }
-                        Log.d("FirebaseLoginFailedException", task.exception?.message.toString())
-
+                    if(firebaseAuth.currentUser?.isEmailVerified == true){
+                        Toast.makeText(this,"signed in successfully",Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    else{
+                        Toast.makeText(this,"email is not verified",Toast.LENGTH_SHORT).show()
                     }
 
-                    binding.loginProgress.visibility=View.GONE
+
+                } else {
+                    when(task.exception){
+                        is FirebaseNetworkException -> Toast.makeText(this, "Check your network connection ", Toast.LENGTH_SHORT).show()
+                        is FirebaseAuthInvalidUserException -> Toast.makeText(this, "User does not exist", Toast.LENGTH_SHORT).show()
+                        is FirebaseAuthInvalidCredentialsException -> Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                        is FirebaseTooManyRequestsException ->   Toast.makeText(this, "Too many attempts, please try again later", Toast.LENGTH_SHORT).show()
+                        else ->  Toast.makeText(this, "Sign in failed,try again", Toast.LENGTH_SHORT).show()
+                    }
 
                 }
 
-        } // logging user when click on login btn with entered credentials
+                binding.loginProgress.visibility=View.GONE
 
-        val googleSignInOptions= GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)  //
+            }
+
+    }
+
+    private fun googleSignIn() {
+
+        val googleSignInOptions= GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.web_client_id))
             .requestEmail()
             .build()
 
         googleSignInClient=GoogleSignIn.getClient(this,googleSignInOptions)
 
-        binding.googleBtn.setOnClickListener {
-
-            binding.loginProgress.visibility=View.VISIBLE
-            val intent:Intent=googleSignInClient.signInIntent
-             startActivityForResult(intent,RC_SIGN_IN)
-
-        }
+        binding.loginProgress.visibility=View.VISIBLE
+        val intent:Intent=googleSignInClient.signInIntent
+        startActivityForResult(intent,RC_SIGN_IN)
 
     }
 
@@ -131,7 +139,7 @@ class LoginScreen : AppCompatActivity() {
 
         // Check if the network has internet connectivity
         return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }   // checking if the user is connected to internet or net
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -153,12 +161,15 @@ class LoginScreen : AppCompatActivity() {
             }
 
         }
+
+
+
     }
 
     private fun firebaseAuthWithGoogleAccount(idToken:String?){
         val credential:AuthCredential =GoogleAuthProvider.getCredential(idToken,null)
 
-        auth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                    // val user = auth.currentUser
@@ -171,6 +182,7 @@ class LoginScreen : AppCompatActivity() {
             }
 
                 }
+
 
     }
 
