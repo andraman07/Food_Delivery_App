@@ -10,7 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.viewpager.widget.ViewPager
 import com.example.fooddeliveryapp.R
-import com.example.fooddeliveryapp.loginpage.LoginScreen
+import com.example.fooddeliveryapp.loginpage.LoginActivity
+import com.example.fooddeliveryapp.models.IntroContent
 import com.google.android.material.tabs.TabLayout
 
 
@@ -21,14 +22,19 @@ class IntroScreen : AppCompatActivity() {
     private lateinit var skipBtn:Button
     private lateinit var nextBtn:Button
     private lateinit var getStartedBtn:AppCompatButton
-    private lateinit var btnAnimation:Animation
+    private lateinit var btnAnimation:Animation   // delay in animation of button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro_screen)
 
 
-        val contentList=IntroData().dataList()
+        val contentList = arrayListOf(
+            IntroContent(R.drawable.img1, R.string.title1, R.string.description1),
+            IntroContent(R.drawable.img2, R.string.title2, R.string.description2),
+            IntroContent(R.drawable.img3, R.string.title3, R.string.description3)
+        )
+
 
         viewPager=findViewById(R.id.view_pager)
         tabLayout=findViewById(R.id.intro_indicator)
@@ -55,14 +61,14 @@ class IntroScreen : AppCompatActivity() {
 
         getStartedBtn.setOnClickListener {
             savePrefsData()
-            startActivity(Intent(this,LoginScreen::class.java))
+            startActivity(Intent(this,LoginActivity::class.java))
         }
 
 
         tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
 
-                if(tab!!.position == contentList.size-1) {
+                if(tab?.position == contentList.size-1) {
                     nextBtn.visibility=View.GONE
                     skipBtn.visibility=View.GONE
                     getStartedBtn.visibility = View.VISIBLE
@@ -78,13 +84,9 @@ class IntroScreen : AppCompatActivity() {
                 }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
 
         })
 
