@@ -22,17 +22,16 @@ class IntroScreen : AppCompatActivity() {
     private lateinit var skipBtn:Button
     private lateinit var nextBtn:Button
     private lateinit var getStartedBtn:AppCompatButton
-    private lateinit var btnAnimation:Animation   // delay in animation of button
+    private lateinit var btnAnimation:Animation          // delay in animation of button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro_screen)
 
-
         val contentList = arrayListOf(
-            IntroContent(R.drawable.img1, R.string.title1, R.string.description1),
-            IntroContent(R.drawable.img2, R.string.title2, R.string.description2),
-            IntroContent(R.drawable.img3, R.string.title3, R.string.description3)
+            IntroContent(R.drawable.img1, R.string.first_slide_title, R.string.first_slide_desc),
+            IntroContent(R.drawable.img2, R.string.second_slide_title, R.string.second_slide_desc),
+            IntroContent(R.drawable.img3, R.string.third_slide_title, R.string.third_slide_desc)
         )
 
 
@@ -47,9 +46,6 @@ class IntroScreen : AppCompatActivity() {
         viewPager.adapter=IntroAdapter(this,contentList)
         tabLayout.setupWithViewPager(viewPager,true)
 
-        if(restorePrefData()){
-             finish()
-        }
 
         nextBtn.setOnClickListener {
             viewPager.currentItem=viewPager.currentItem+1
@@ -62,6 +58,7 @@ class IntroScreen : AppCompatActivity() {
         getStartedBtn.setOnClickListener {
             savePrefsData()
             startActivity(Intent(this,LoginActivity::class.java))
+            finish()
         }
 
 
@@ -97,17 +94,15 @@ class IntroScreen : AppCompatActivity() {
         moveTaskToBack(true)
     }
 
-    private fun restorePrefData(): Boolean {
-        val pref = applicationContext.getSharedPreferences("myPrefs", MODE_PRIVATE)
-        return pref.getBoolean("isIntroOpened", false)
-    }
-
     private fun savePrefsData() {
         val pref = applicationContext.getSharedPreferences("myPrefs", MODE_PRIVATE)
         val editor = pref.edit()
         editor.putBoolean("isIntroOpened", true)
         editor.apply()
+
     }
+
+
 
 
 }
