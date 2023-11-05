@@ -8,9 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.example.fooddeliveryapp.R
+import com.example.fooddeliveryapp.models.IntroContent
 
-class IntroAdapter(private val context: Context,private val introList:ArrayList<Content>) : PagerAdapter() {
-
+class IntroAdapter(private val context: Context,private val introList:ArrayList<IntroContent>) : PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any{
         val inflater = LayoutInflater.from(context)
@@ -21,8 +21,8 @@ class IntroAdapter(private val context: Context,private val introList:ArrayList<
         val introDescription:TextView=view.findViewById(R.id.intro_description)
 
         introImage.setImageResource(introList[position].imageId)
-        introTitle.text=introList[position].title
-        introDescription.text=introList[position].description
+        introTitle.text=context.getString(introList[position].title)
+        introDescription.text=context.getString(introList[position].description)
 
         container.addView(view)
         return view
@@ -39,6 +39,5 @@ class IntroAdapter(private val context: Context,private val introList:ArrayList<
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
         return view == `object`
     }
-
 
 }
